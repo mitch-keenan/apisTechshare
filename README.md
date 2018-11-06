@@ -1,8 +1,34 @@
-# Browser APIs
+# Browser APIs Tech Share Repo
 
-## Planet of the APIS
+View the slides [here](http://mitchkeenan.com/apiTechshare), or see below for notes.
 
-// IMAGE GOES HERE
+## Browser API Blitz
+
+Index:
+
+- [Browser APIs Tech Share Repo](#browser-apis-tech-share-repo)
+  - [Browser API Blitz](#browser-api-blitz)
+  - [Planet of the APIs](#planet-of-the-apis)
+  - [Performance Observer](#performance-observer)
+  - [Paint Timing APIs](#paint-timing-apis)
+  - [Interaction Observer API](#interaction-observer-api)
+  - [Media Capabilities API](#media-capabilities-api)
+  - [Network Info API](#network-info-api)
+  - [Battery Status API](#battery-status-api)
+  - [Server Timing API](#server-timing-api)
+  - [Long Task API](#long-task-api)
+  - [Others](#others)
+    - [Navigation API](#navigation-api)
+    - [Timers 1: time and timeEnd](#timers-1-time-and-timeend)
+    - [Timers 2: performance.now()](#timers-2-performancenow)
+    - [Timers 3: User Timing API](#timers-3-user-timing-api)
+  - [Resources](#resources)
+
+---
+
+## Planet of the APIs
+
+![Henri Helvetica's Title Card](http://mitchkeenan.com/apiTechshare/titleCard.png)
 
 Original Presentation by Henri Helvetica ([@HenriHelvetica](https://twitter.com/HenriHelvetica)) at Web Unleashed.
 
@@ -10,7 +36,7 @@ Henri's presentation focused about 50/50 on the *why* and the *how* of using the
 
 I will mention that it seemed that one of the major underlying themes of Web Unleashed was the the *next billion* and how they access the web. Henri's talk stressed that performance is not just about sites loading 100ms faster on your 5G iPhone SX Pixel Pro, but also about the people on 2G/3G $30 phones being able to access your site at all.
 
-## Before We Start: Performance Observer
+## Performance Observer
 
 Not covered in Henri's Presentation, but used for several APIs he did cover.
 
@@ -24,10 +50,10 @@ const observer = new PerformanceObserver(list => {
 });
 observer.observe({ entryTypes: [
   'frame', // Event Loop
-  'navigation' // Navigation Events (slide XXX) 
+  'navigation' // Navigation Events (see below) 
   'resource' // Resource Requests
-  'mark', 'measure', // User Timings API (slide XXX)
-  'paint', // Paint Timing API (slide 4)
+  'mark', 'measure', // User Timings API (see below) 
+  'paint', // Paint Timing API (see below) ****
 ]});
 ```
 
@@ -53,7 +79,8 @@ const observer = new PerformanceObserver(list => {
 observer.observe({ entryTypes: ['paint'] });
 ```
 
-```
+```js
+// Logs:
 > Performance Metrics first-paint 1607
 > Performance Metrics first-contentful-paint 1607
 ```
@@ -133,9 +160,9 @@ NetworkInformation {
 
 ---
 
-## Battery Status API [**Deprecated**]
+## Battery Status API
 
-The Battery Status API provides information about the systems **battery charge level** and lets you be notified by events that are sent when **the battery level or charging status change.** It is hover **deprecated**.
+The Battery Status API provides information about the systems **battery charge level** and lets you be notified by events that are sent when **the battery level or charging status change.** It is however **deprecated**.
 
 ```js
 if (navigator.battery) {
@@ -216,7 +243,7 @@ Not oncluded in Henri's Presentation, but I think are relevant.
 
 ---
 
-## Navigation API
+### Navigation API
 
 Similar to the Paint Timing APIs in implementation. Measures allows us to see lots of useful metrics like network request timings as well as **DOM ready**, **DOM interactive**, etc.
 
@@ -269,7 +296,7 @@ PerformanceNavigationTiming {
 
 ---
 
-## Timers 1: `time` and `timeEnd`
+### Timers 1: time and timeEnd
 
 Quick and easy way to monitor **execution time**. Available in browser and node.
 
@@ -289,7 +316,7 @@ setTimeout(() => {
 
 ---
 
-## Timers 2: `performance.now()`
+### Timers 2: performance.now()
 
 `performance.now()` returns a very high precision† (up to microseconds) elapsed time since the start of the document's lifetime.
 
@@ -311,7 +338,7 @@ setTimeout(() => {
 
 ---
 
-## Timers 3: User Timing API
+### Timers 3: User Timing API
 
 Another way to monitor **elapsed time** with high precision (uses `performance.now()` under the hood). Marks and measures can also be monitored with a PerformanceObserver.
 

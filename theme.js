@@ -5,6 +5,13 @@ import prismJSON from "react-syntax-highlighter/languages/prism/json";
 
 export const theme = {
   ...future,
+  css: {
+    ...future.css,
+    fontSize: "16px",
+    "@media screen and (min-width:64em)": {
+      fontSize: "20px"
+    }
+  },
   colors: {
     ...future.colors,
     // Dark: #333031
