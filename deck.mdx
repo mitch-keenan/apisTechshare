@@ -1,0 +1,460 @@
+export { theme } from './theme.js';
+
+import { Head, Image } from 'mdx-deck';
+
+<Head>
+  <title>Browser API Blitz</title>
+</Head>
+
+# Browser API Blitz
+
+### Mitch Keenan
+
+---
+
+<Image src='./titleCard.png'/>
+
+```notes
+Planet of the APIs
+
+Henri Helvetica
+Web Unleashed.
+
+50/50 why and how to use
+Im covering how to not mangling & condense
+
+Web unleashed theme: next billion
+Perf isn't just about gaining 100ms on the 5G iPhone SX Pixel Pro
+Also about enable access at all for $30 2G/3G phones in emerging markets
+```
+---
+
+## Preface: Performance Observer
+
+```js
+const observer = new PerformanceObserver(list => {
+  for (const entry of list.getEntries()) {
+    console.log(entry);
+  }
+});
+
+observer.observe({ entryTypes: [ // These are all PerformanceEntry
+  'frame', // Event Loop
+  'navigation' // Navigation Events (slide XXX) 
+  'resource' // Resource Requests
+  'mark', 'measure', // User Timings API (slide XXX)
+  'paint', // Paint Timing API (slide 4)
+]});
+```
+
+We won't cover all of these but they are all useful, [check them out](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEntry/entryType).
+
+```notes
+Performance Observer
+
+Not covered in Henri's Presentation, but can be used for several APIs he did cover.
+
+Allows observation of many performance based events and data.
+```
+
+---
+
+## Paint Timing API
+
+```js
+// Put the following in `<head>`
+const observer = new PerformanceObserver(list => {
+  for (const entry of list.getEntries()) {
+    // `name` will be either 'first-paint' or 'first-contentful-paint'.
+    const metricName = entry.name;
+
+    // Adding startTime is important here or you could skew the numbers drastically.
+    const time = Math.round(entry.startTime + entry.duration);
+
+    console.log('Performance Metrics', metricName, time);
+  }
+});
+observer.observe({ entryTypes: ['paint'] });
+```
+
+```
+> Performance Metrics first-paint 1607
+> Performance Metrics first-contentful-paint 1607
+```
+
+```notes
+Paint Timing API 
+measure:
+  time to
+
+  first meaningful paint
+  
+  first contentful paint
+  
+  in code
+```
+
+---
+
+## Intesection Observer API
+
+```js
+const observer = new IntersectionObserver( entries => {
+  entries.forEach( entry => {
+    if ( entry.intersectionRatio > 0 ) {
+      console.log('Entry is visible.');
+    } else {
+      console.log('Entry is not visible.');
+    }
+  });
+});
+
+observer.observe( document.querySelectorAll('.some-elements') );
+```
+
+[Demo on Alligator.io](https://alligator.io/js/intersection-observer/#simple-example)
+
+```notes
+Intersection Observer API
+
+visibility and position of DOM elements
+relative to
+intersection root
+
+infinite scrolling.
+```
+
+---
+
+## Media Capabilities API
+
+```js
+const mediaConfig = {
+  type: 'file',
+  audio: {
+    contentType: 'audio/ogg',
+    channels: 2,
+    bitrate: 132700,
+    samplerateL: 5200
+  }
+};
+
+navigator.mediaCapabilities.decodingInfo(mediaConfig).then(result => {
+  console.log(result);
+})
+```
+
+```json
+MediaCapabilitiesInfo {
+  supported: false,
+  smooth: false,
+  powerEfficient: false
+}
+```
+
+```notes
+Media Capabilities API
+
+query the user agent
+decoding and encoding abilities of the device
+based on  codecs, profile, resolution, bitrates, etc.
+
+supported
+smooth
+power efficient
+```
+
+---
+
+## Network Info API
+
+```js
+console.log(navigator.connection);
+```
+
+```json
+NetworkInformation {
+  downlink: 10,
+  effectiveType: '4g',
+  onchange: null,
+  rtt: 100,
+  saveData: false,
+}
+```
+
+```notes
+Network Information API
+
+network connection in use by the device.
+
+can be observed
+```
+
+---
+
+## Battery Status API [**Deprecated**]
+
+```js
+if (navigator.battery) {
+  console.log(navigator.battery);
+} else if (navigator.getBattery) {
+  navigator.getBattery().then(console.log);
+} else {
+  console.log('Battery Status not supported');
+}
+```
+
+```json
+BatteryManager {
+  charging: true,
+  chargingTime: 0,
+  dischargingTime: Infinity,
+  level: 1,
+  onchargingchange: null,
+  onchargingtimechange: null,
+  ondischargingtimechange: null,
+  onlevelchange: null
+}
+```
+
+[Demo](http://pazguille.github.io/demo-battery-api/)
+
+```notes
+Battery Status API
+
+battery charge level
+
+listen for changes to
+battery level
+charging status change
+
+Deprecated
+```
+
+---
+
+## Server Timing API
+
+```js
+const entries = performance.getEntriesByType('resource');
+console.log(entries[0].serverTiming);
+```
+
+In this case the server would be setting the following header:
+
+```http
+Server-Timing: cache;desc="Cache Read";dur=23.2,db;dur=53,app;dur=47.2
+```
+
+And on the client we'd see the following log:
+
+```json
+// Logs:
+[
+  PerformanceServerTiming { name: 'cache', duration: 23.2, description: 'Cache Read' },
+  PerformanceServerTiming { name: 'db',    duration: 53,   description: '' },
+  PerformanceServerTiming { name: 'app',   duration: 47.2, description: '' }
+]
+```
+
+```notes
+Server Timing API
+
+Standardizes access to Server-Timing header values in client code.
+
+Server has to set the headers
+```
+
+---
+
+## Long Task API
+
+Note: Chrome only for now
+
+```js
+const observer = new PerformanceObserver(list => {
+  for (const entry of list.getEntries()) {
+    console.log(entry);
+  }
+});
+observer.observe({ entryTypes: ['longtask'] });
+```
+
+
+[Demo](https://w3c.github.io/longtasks/render-jank-demo.html)
+
+```notes
+Long Task API
+
+Working Draft
+Chrome only
+
+proposed long task API 
+monitor for executions > 50ms.
+```
+
+---
+
+## Others
+
+Not oncluded in Henri's Presentation, but I think are relevant.
+
+---
+
+## Navigation Timing API
+
+```js
+const observer = new PerformanceObserver(list => {
+  for (const entry of list.getEntries()) {
+    console.log(entry);
+  }
+});
+observer.observe({ entryTypes: ['navigation'] });
+```
+
+```js
+// Logs:
+PerformanceNavigationTiming {
+  connectEnd: 14.800000004470348,
+  connectStart: 14.600000009522773,
+  decodedBodySize: 50817,
+  domComplete: 2621.500000008382,
+  domContentLoadedEventEnd: 799.299999998766,
+  domContentLoadedEventStart: 785.7000000076368,
+  domInteractive: 782.2000000014668,
+  domainLookupEnd: 14.600000009522773,
+  domainLookupStart: 14.600000009522773,
+  duration: 2653.7000000098487,
+  encodedBodySize: 50817,
+  // ... 20 more
+}
+```
+
+```notes
+Navigation Timing API
+
+Use performance observer to view
+
+lots of useful metrics
+  network request timings
+  DOM ready
+  DOM interactive
+
+'resource' Performance carries a lot of the same request info but for every resource request
+```
+
+---
+
+## Timers 1: time and timeEnd
+
+
+```js
+const TIMER_NAME = 'myFirstTimer';
+
+console.time(TIMER_NAME); // Start the timer
+
+setTimeout(() => {
+  console.timeEnd(TIMER_NAME); // End the timer and log the elapsed time.
+}, 1000);
+```
+
+```js
+// Logs:
+> myFirstTimer: 1002.4091796875ms
+```
+
+```notes
+Monitor **execution time**.
+
+Available in browser and node.
+
+Note: no way to get the value programmatically.
+```
+
+---
+
+## Timers 2: `performance.now()`
+
+```js
+const t1 = performance.now();
+
+setTimeout(() => {
+  const t2 = performance.now();
+  
+  console.log(`Took ${t2 - t1} milliseconds.`);
+}, 1000);
+```
+
+```js
+// Logs:
+> Took 1001.7000000079861 milliseconds.
+```
+
+```notes
+`performance.now()`
+high precision† (up to microseconds)
+
+elapsed time since the start of document's lifetime.
+
+used for other measurment tools
+
+The timestamp is not actually high-resolution.
+To mitigate timing-attack based security threats such as Spectre, browsers currently round the results to varying degrees.
+```
+
+---
+
+## Timers 3: User Timing API
+
+```js
+performance.mark('start-script'); // Create Starting Mark
+setTimeout(() => {
+  performance.mark('end-script'); // Create Ending Mark
+  
+  // Create the Measure
+  performance.measure('total-time', 'start-script', 'end-script');
+
+  // Get the result
+  const result = performance.getEntriesByName('total-time', 'measure')[0];
+
+  console.log(result);
+}, 1000);
+```
+
+```js
+// Logs:
+PerformanceMeasure {
+  name: 'total-script-execution-time',
+  entryType: 'measure',
+  startTime: 4354.699999996228,
+  duration: 1004.2000000103144
+}
+```
+
+```notes
+Monitor **elapsed time** with high precision (uses `performance.now()` under the hood).
+
+Can use PerformanceObserver.
+```
+
+---
+
+## We Made It!
+
+---
+
+## Resources
+
+* [Planet of the APIs Presentation Page](https://fitc.ca/presentation/planet-of-apis-a-tale-of-performance-user-experience/) and [Slides by Henri Helvetica](https://www.slideshare.net/fitc_slideshare/planet-of-apis-a-tale-of-performance-user-experience)
+* [Performance Observer API](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver) and [Perfomance Entry](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEntry/entryType)
+* [Paint Timing API](https://developer.mozilla.org/en-US/docs/Web/API/PerformancePaintTiming)
+* [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API), [Demo on Alligator.io](https://alligator.io/js/intersection-observer/#simple-example), [Demo by Google](https://googlechrome.github.io/samples/intersectionobserver/)
+* [Media Capabilities API](https://developer.mozilla.org/en-US/docs/Web/API/Media_Capabilities_API)
+* [Network Information API](https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API)
+* [Battery Status API](https://developer.mozilla.org/en-US/docs/Web/API/Battery_Status_API), [Demo by Guille Paz](http://pazguille.github.io/demo-battery-api/)
+* [Server Timing API](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceServerTiming)
+* [Long Tasks API](https://developer.mozilla.org/en-US/docs/Web/API/Long_Tasks_API), [Demo by w3c](https://w3c.github.io/longtasks/render-jank-demo.html)
+* [Navigation TIming API](https://developer.mozilla.org/en-US/docs/Web/API/Navigation_timing_API)
+* [Timers API](https://developer.mozilla.org/en-US/docs/Web/API/console#Timers)
+* [performance.now()](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now)
+* [User Timing API](https://developer.mozilla.org/en-US/docs/Web/API/User_Timing_API)
