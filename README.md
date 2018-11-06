@@ -1,6 +1,6 @@
 # Browser APIs Tech Share Repo
 
-View the slides [here](http://mitchkeenan.com/apiTechshare), or see below for notes.
+View the slides [here](http://mitchkeenan.com/apisTechshare), or see below for notes.
 
 ## Browser API Blitz
 
@@ -28,7 +28,7 @@ Index:
 
 ## Planet of the APIs
 
-![Henri Helvetica's Title Card](http://mitchkeenan.com/apiTechshare/titleCard.png)
+![Henri Helvetica's Title Card](http://mitchkeenan.com/apisTechshare/titleCard.png)
 
 Original Presentation by Henri Helvetica ([@HenriHelvetica](https://twitter.com/HenriHelvetica)) at Web Unleashed.
 
@@ -81,8 +81,8 @@ observer.observe({ entryTypes: ['paint'] });
 
 ```js
 // Logs:
-> Performance Metrics first-paint 1607
-> Performance Metrics first-contentful-paint 1607
+// > Performance Metrics first-paint 1607
+// > Performance Metrics first-contentful-paint 1607
 ```
 
 ---
@@ -131,10 +131,10 @@ navigator.mediaCapabilities.decodingInfo(mediaConfig).then(result => {
 ```
 
 ```json
-MediaCapabilitiesInfo {
-  supported: false,
-  smooth: false,
-  powerEfficient: false
+MediaCapabilitiesInfo: {
+  "supported": false,
+  "smooth": false,
+  "powerEfficient": false
 }
 ```
 
@@ -149,12 +149,12 @@ console.log(navigator.connection);
 ```
 
 ```json
-NetworkInformation {
-  downlink: 10,
-  effectiveType: '4g',
-  onchange: null,
-  rtt: 100,
-  saveData: false,
+NetworkInformation: {
+  "downlink": 10,
+  "effectiveType": "4g",
+  "onchange": null,
+  "rtt": 100,
+  "saveData": false,
 }
 ```
 
@@ -175,15 +175,15 @@ if (navigator.battery) {
 ```
 
 ```json
-BatteryManager {
-  charging: true,
-  chargingTime: 0,
-  dischargingTime: Infinity,
-  level: 1,
-  onchargingchange: null,
-  onchargingtimechange: null,
-  ondischargingtimechange: null,
-  onlevelchange: null
+BatteryManager: {
+  "charging": true,
+  "chargingTime": 0,
+  "dischargingTime": "Infinity",
+  "level": 1,
+  "onchargingchange": null,
+  "onchargingtimechange": null,
+  "ondischargingtimechange": null,
+  "onlevelchange": null
 }
 ```
 
@@ -208,13 +208,11 @@ Server-Timing: cache;desc="Cache Read";dur=23.2,db;dur=53,app;dur=47.2
 
 And on the client we'd see the following log:
 
-```json
+```js
 // Logs:
-[
-  PerformanceServerTiming { name: 'cache', duration: 23.2, description: 'Cache Read' },
-  PerformanceServerTiming { name: 'db',    duration: 53,   description: '' },
-  PerformanceServerTiming { name: 'app',   duration: 47.2, description: '' }
-]
+// > PerformanceServerTiming { name: 'cache', duration: 23.2, description: 'Cache Read' },
+// > PerformanceServerTiming { name: 'db',    duration: 53,   description: '' },
+// > PerformanceServerTiming { name: 'app',   duration: 47.2, description: '' }
 ```
 
 ---
@@ -231,7 +229,6 @@ const observer = new PerformanceObserver(list => {
 });
 observer.observe({ entryTypes: ['longtask'] });
 ```
-
 
 [Demo](https://w3c.github.io/longtasks/render-jank-demo.html)
 
@@ -258,39 +255,39 @@ observer.observe({ entryTypes: ['navigation'] });
 
 ```json
 // Logs:
-PerformanceNavigationTiming {
-  connectEnd: 14.800000004470348,
-  connectStart: 14.600000009522773,
-  decodedBodySize: 50817,
-  domComplete: 2621.500000008382,
-  domContentLoadedEventEnd: 799.299999998766,
-  domContentLoadedEventStart: 785.7000000076368,
-  domInteractive: 782.2000000014668,
-  domainLookupEnd: 14.600000009522773,
-  domainLookupStart: 14.600000009522773,
-  duration: 2653.7000000098487,
-  encodedBodySize: 50817,
-  entryType: 'navigation',
-  fetchStart: 7.599999997182749,
-  initiatorType: 'navigation',
-  loadEventEnd: 2653.7000000098487,
-  loadEventStart: 2621.7000000033295,
-  name: 'http://localhost:3000',
-  nextHopProtocol: 'http/1.1',
-  redirectCount: 0,
-  redirectEnd: 0,
-  redirectStart: 0,
-  requestStart: 14.900000009220093,
-  responseEnd: 165.0999999983469,
-  responseStart: 158.99999999965075,
-  secureConnectionStart: 0,
-  serverTiming: [],
-  startTime: 0,
-  transferSize: 51057,
-  type: 'reload',
-  unloadEventEnd: 169.00000000896398,
-  unloadEventStart: 165.8000000024913,
-  workerStart: 0,
+PerformanceNavigationTiming: {
+  "connectEnd": 14.800000004470348,
+  "connectStart": 14.600000009522773,
+  "decodedBodySize": 50817,
+  "domComplete": 2621.500000008382,
+  "domContentLoadedEventEnd": 799.299999998766,
+  "domContentLoadedEventStart": 785.7000000076368,
+  "domInteractive": 782.2000000014668,
+  "domainLookupEnd": 14.600000009522773,
+  "domainLookupStart": 14.600000009522773,
+  "duration": 2653.7000000098487,
+  "encodedBodySize": 50817,
+  "entryType": "navigation",
+  "fetchStart": 7.599999997182749,
+  "initiatorType": "navigation",
+  "loadEventEnd": 2653.7000000098487,
+  "loadEventStart": 2621.7000000033295,
+  "name": "http://localhost:3000",
+  "nextHopProtocol": "http/1.1",
+  "redirectCount": 0,
+  "redirectEnd": 0,
+  "redirectStart": 0,
+  "requestStart": 14.900000009220093,
+  "responseEnd": 165.0999999983469,
+  "responseStart": 158.99999999965075,
+  "secureConnectionStart": 0,
+  "serverTiming": [],
+  "startTime": 0,
+  "transferSize": 51057,
+  "type": "reload",
+  "unloadEventEnd": 169.00000000896398,
+  "unloadEventStart": 165.8000000024913,
+  "workerStart": 0,
 }
 ```
 
@@ -310,8 +307,9 @@ setTimeout(() => {
 }, 1000);
 ```
 
-```console
-> myFirstTimer: 1002.4091796875ms
+```js
+// Logs:
+// > myFirstTimer: 1002.4091796875ms
 ```
 
 ---
@@ -328,9 +326,9 @@ setTimeout(() => {
 }, 1000);
 ```
 
-```console
+```js
 // Logs:
-> Took 1001.7000000079861 milliseconds.
+// > Took 1001.7000000079861 milliseconds.
 ```
 
 †
@@ -367,11 +365,11 @@ setTimeout(() => {
 
 ```json
 // Logs:
-PerformanceMeasure {
-  name: 'total-script-execution-time',
-  entryType: 'measure',
-  startTime: 4354.699999996228,
-  duration: 1004.2000000103144
+PerformanceMeasure: {
+  "name": "total-script-execution-time",
+  "entryType": "measure",
+  "startTime": 4354.699999996228,
+  "duration": 1004.2000000103144
 }
 ```
 
@@ -387,4 +385,4 @@ PerformanceMeasure {
 * [`performance.now()`](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now)
 * [User Timing API](https://developer.mozilla.org/en-US/docs/Web/API/User_Timing_API)
 * [Server Timing API](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceServerTiming)
-* [Long Tasks API](https://developer.mozilla.org/en-US/docs/Web/API/Long_Tasks_API), [Demo](https://w3c.github.io/longtasks/render-jank-demo.html)
+* [Long Tasks API](https://developer.mozilla.org/en-US/docs/Web/API/Long_Tasks_API), [Demo](https://w3c.github.io/longtasks/render-jank-demo.html)****
